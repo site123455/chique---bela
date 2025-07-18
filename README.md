@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chique e Bela</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background-color: #ffe6f0;
+      color: #000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    header {
+      background-color: #fff0f6;
+      padding: 1rem;
+      text-align: center;
+      position: relative;
+    }
+    header img {
+      max-width: 140px;
+      border-radius: 12px;
+    }
+    header h1 {
+      font-family: 'Dancing Script', cursive;
+      color: #b30059;
+      margin: 0.5rem 0;
+      font-weight: 700;
+      font-size: 2.8rem;
+    }
+    .modo-escuro-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #b30059;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      user-select: none;
+      transition: background-color 0.3s;
+    }
+    .modo-escuro-btn:hover {
+      background-color: #ff66a3;
+    }
+
+    .filtros {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .filtros button {
+      background-color: #ff66a3;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .filtros button:hover {
+      background-color: #b30059;
+    }
+
+    .produtos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .produto {
+      background: white;
+      margin: 10px;
+      border-radius: 10px;
+      padding: 10px;
+      max-width: 280px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .produto img.imagem-principal {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      background: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .miniaturas {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      margin-top: 5px;
+    }
+    .miniatura {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .miniatura:hover {
+      border-color: #b30059;
+    }
+
+    .admin-btns {
+      text-align: center;
+      margin-top: 8px;
+    }
+    .admin-btns button {
+      margin: 3px;
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    .btn-editar {
+      background-color: #f39c12;
+    }
+    .btn-apagar {
+      background-color: #c0392b;
+    }
+
+    #adminPanel {
+      display: none;
+      background: #fff0f6;
+      padding: 1rem;
+      margin: 1rem;
+      border-radius: 10px;
+      color: #000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #adminPanel input {
+      display: block;
+      margin: 0.5rem auto;
+      width: 90%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    #adminPanel button {
+      display: block;
+      margin: 1rem auto;
+      background: #2ecc71;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    #adminLoginBtn {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #ccc;
+      user-select: none;
+      transition: color 0.3s;
+    }
+    #adminLoginBtn:hover {
+      color: #b30059;
+    }
+
+    #adminModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #adminModal div {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    #adminModal input {
+      padding: 8px;
+      width: 100%;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      z-index: 1000;
+    }
+
+    .whatsapp-float.right {
+      right: 20px;
+    }
+
+    .whatsapp-float.left {
+      left: 20px;
+    }
+
+    /* Botão adicionar ao carrinho */
+    .btn-add-carrinho {
+      background-color: #b30059;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 15px;
+      margin-top: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.3s;
+    }
+    .btn-add-carrinho:hover {
+      background-color: #ff66a3;
+    }
+
+    /* Mensagem de confirmação ao adicionar */
+    #msgAddCarrinho {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #2ecc71;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      z-index: 1100;
+    }
+
+    /* Modo escuro */
+    body.dark {
+      background-color: #121212;
+      color: #eee;
+    }
+    body.dark header {
+      background-color: #2c0033;
+    }
+    body.dark header h1 {
+      color: #ff66a3;
+    }
+    body.dark .modo-escuro-btn {
+      background: #ff66a3;
+      color: #2c0033;
+    }
+    body.dark .modo-escuro-btn:hover {
+      background-color: #b30059;
+      color: white;
+    }
+    body.dark .filtros button {
+      background-color: #b30059;
+      color: white;
+    }
+    body.dark .filtros button:hover {
+      background-color: #ff66a3;
+    }
+    body.dark .produto {
+      background: #1e1e1e;
+      color: #eee;
+      box-shadow: 0 4px 10px rgba(255, 102, 163, 0.3);
+    }
+    body.dark .produto img.imagem-principal {
+      background: #2c0033;
+    }
+    body.dark .miniatura:hover {
+      border-color: #ff66a3;
+    }
+    body.dark #adminPanel {
+      background: #2c0033;
+      color: #eee;
+    }
+    body.dark #adminPanel input {
+      background: #1e1e1e;
+      color: #eee;
+      border: 1px solid #444;
+    }
+    body.dark #adminPanel button {
+      background: #ff66a3;
+      color: #2c0033;
+    }
+    body.dark .admin-btns button.btn-editar {
+      background-color: #ffa726;
+      color: #2c0033;
+    }
+    body.dark .admin-btns button.btn-apagar {
+      background-color: #e57373;
+      color: #2c0033;
+    }
+    body.dark .btn-add-carrinho {
+      background-color: #ff66a3;
+      color: #2c0033;
+    }
+    body.dark .btn-add-carrinho:hover {
+      background-color: #b30059;
+      color: white;
+    }
+    body.dark #adminLoginBtn {
+      color: #555;
+    }
+    body.dark #adminLoginBtn:hover {
+      color: #ff66a3;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://i.postimg.cc/525sqvZQ/logo-dani.png" alt="Logo">
+    <h1>Chique e Bela</h1>
+    <button class="modo-escuro-btn" onclick="toggleModoEscuro()">Modo Escuro</button>
+  </header>
+
+  <div class="filtros">
+    <button onclick="filtrar('todos')">Todos</button>
+    <button onclick="filtrar('verao')">Verão</button>
+    <button onclick="filtrar('inverno')">Inverno</button>
+    <button onclick="filtrar('sapatos')">Sapatos</button>
+  </div>
+
+  <div id="produtos" class="produtos"></div>
+
+  <button id="adminLoginBtn" onclick="document.getElementById('adminModal').style.display='flex'">⚙️</button>
+
+  <div id="adminModal">
+    <div>
+      <p>Senha do admin:</p>
+      <input type="password" id="senha">
+      <button onclick="login()">Entrar</button>
+    </div>
+  </div>
+
+  <div id="adminPanel">
+    <h3>Adicionar Produto</h3>
+    <input type="text" id="nomeProduto" placeholder="Nome do produto">
+    <input type="text" id="precoProduto" placeholder="Preço">
+    <input type="text" id="categoriaProduto" placeholder="Categoria (verao, inverno, sapatos)">
+    <input type="text" id="imagensProduto" placeholder="Imagens (URLs separadas por vírgula)">
+    <button onclick="adicionarProduto()">Adicionar Produto</button>
+  </div>
+
+  <a href="#" class="whatsapp-float left" target="_blank" id="botaoCarrinhoWhatsApp" title="Carrinho WhatsApp">
+    <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="WhatsApp" style="width:60px;" />
+  </a>
+
+  <div id="msgAddCarrinho">Produto adicionado ao carrinho!</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getDatabase, ref, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyALZ5b_18LXMEMDxNh6Cg4W2xNBCyKsTU4",
+      authDomain: "loja-dani.firebaseapp.com",
+      databaseURL: "https://loja-dani-default-rtdb.firebaseio.com",
+      projectId: "loja-dani",
+      storageBucket: "loja-dani.appspot.com",
+      messagingSenderId: "220237265878",
+      appId: "1:220237265878:web:6f2baf2bc1bebcd5418277"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const produtosRef = ref(db, 'produtos');
+
+    let modoAdmin = false;
+    let produtosCache = null;
+
+    // Carrinho local
+    let carrinho = [];
+
+    function carregarProdutos(produtos) {
+      produtosCache = produtos;
+      const container = document.getElementById("produtos");
+      container.innerHTML = "";
+      for (let id in produtos) {
+        const prod = produtos[id];
+        const imagens = prod.imagens?.split(",").map(url => url.trim()) || [];
+        const img = imagens[0] || 'https://via.placeholder.com/300x200?text=Sem+imagem';
+        const miniaturas = imagens.map(url => `<img src="${url}" class="miniatura" onclick="document.getElementById('img-${id}').src='${url}'">`).join("");
+
+        container.innerHTML += `
+          <div class="produto" data-categoria="${prod.categoria}">
+            <img src="${img}" class="imagem-principal" id="img-${id}">
+            <div class="miniaturas">${miniaturas}</div>
+            <h4>${prod.nome}</h4>
+            <p><strong>R$ ${prod.preco}</strong></p>
+            <button class="btn-add-carrinho" onclick="adicionarAoCarrinho('${id}')">Adicionar ao carrinho</button>
+            ${modoAdmin ? `
+              <div class="admin-btns">
+                <button class="btn-editar" onclick="editarProduto('${id}')">Editar</button>
+                <button class="btn-apagar" onclick="apagarProduto('${id}')">Apagar</button>
+              </div>` : ""}
+          </div>
+        `;
+      }
+      atualizarLinkWhatsapp();
+    }
+
+    onValue(produtosRef, snapshot => {
+      carregarProdutos(snapshot.val() || {});
+    });
+
+    window.adicionarProduto = function () {
+      const nome = document.getElementById("nomeProduto").value.trim();
+      const preco = document.getElementById("precoProduto").value.trim();
+      const categoria = document.getElementById("categoriaProduto").value.trim().toLowerCase();
+      const imagens = document.getElementById("imagensProduto").value.trim();
+
+      if (!nome || !preco || !categoria || !imagens) {
+        alert("Preencha todos os campos para adicionar o produto.");
+        return;
+      }
+      push(produtosRef, { nome, preco, categoria, imagens });
+      alert("Produto adicionado!");
+      document.getElementById("nomeProduto").value = "";
+      document.getElementById("precoProduto").value = "";
+      document.getElementById("categoriaProduto").value = "";
+      document.getElementById("imagensProduto").value = "";
+    }
+
+    window.login = function () {
+      const senha = document.getElementById("senha").value.trim().toLowerCase();
+      if (senha === "crochê" || senha === "croche") {
+        modoAdmin = true;
+        document.getElementById("adminPanel").style.display = "block";
+        document.getElementById("adminModal").style.display = "none";
+        carregarProdutos(produtosCache);
+      } else {
+        alert("Senha incorreta.");
+      }
+    }
+
+    window.editarProduto = function (id) {
+      const p = produtosCache[id];
+      const novoNome = prompt("Novo nome:", p.nome);
+      if (!novoNome) return;
+      const novoPreco = prompt("Novo preço:", p.preco);
+      if (!novoPreco) return;
+      const novasImagens = prompt("Novas imagens (URLs separadas por vírgula):", p.imagens);
+      if (novasImagens === null) return;
+      update(ref(db, 'produtos/' + id), {
+        nome: novoNome,
+        preco: novoPreco,
+        imagens: novasImagens
+      });
+    }
+
+    window.apagarProduto = function (id) {
+      if (confirm("Deseja apagar este produto?")) {
+        remove(ref(db, 'produtos/' + id));
+      }
+    }
+
+    window.filtrar = function (categoria) {
+      const todos = document.querySelectorAll(".produto");
+      todos.forEach(p => {
+        if (categoria === "todos" || p.getAttribute("data-categoria") === categoria) {
+          p.style.display = "flex";
+        } else {
+          p.style.display = "none";
+        }
+      });
+      atualizarLinkWhatsapp();
+    }
+
+    // Adicionar produto ao carrinho
+    window.adicionarAoCarrinho = function (id) {
+      if (!produtosCache[id]) return;
+      const p = produtosCache[id];
+
+      // Verifica se já está no carrinho
+      const itemExistente = carrinho.find(item => item.id === id);
+      if (itemExistente) {
+        itemExistente.quantidade++;
+      } else {
+        carrinho.push({ id, nome: p.nome, preco: parseFloat(p.preco.replace(",", ".") || 0), quantidade: 1 });
+      }
+      mostrarMensagemAddCarrinho();
+      atualizarLinkWhatsapp();
+    }
+
+    // Atualizar link WhatsApp com carrinho ou produtos visíveis
+    function atualizarLinkWhatsapp() {
+      let msg = "";
+
+      if (carrinho.length > 0) {
+        msg = "Olá! Gostaria de comprar:%0A";
+        let total = 0;
+        carrinho.forEach((item, i) => {
+          const precoTotal = item.preco * item.quantidade;
+          total += precoTotal;
+          msg += `${i+1}. ${item.nome} - ${item.quantidade}x - R$ ${precoTotal.toFixed(2).replace(".", ",")}%0A`;
+        });
+        msg += `%0ATotal: R$ ${total.toFixed(2).replace(".", ",")}`;
+      } else {
+        // Produtos visíveis
+        const visiveis = Array.from(document.querySelectorAll(".produto")).filter(p => p.style.display !== "none");
+        if (visiveis.length === 0) {
+          msg = "Olá! Gostaria de receber informações sobre seus produtos.";
+        } else {
+          msg = "Olá! Gostaria de receber informações sobre os seguintes produtos:%0A";
+          visiveis.forEach((p, i) => {
+            const nome = p.querySelector("h4")?.textContent || "";
+            const preco = p.querySelector("p strong")?.textContent || "";
+            msg += `${i+1}. ${nome} - ${preco}%0A`;
+          });
+        }
+      }
+
+      const numero = "+554198444645"; // Número ajustado sem espaços nem traço para WhatsApp
+      const link = `https://api.whatsapp.com/send?phone=${numero}&text=${msg}`;
+      document.getElementById("botaoCarrinhoWhatsApp").href = link;
+    }
+
+    // Mensagem que aparece quando adiciona produto
+    function mostrarMensagemAddCarrinho() {
+      const msg = document.getElementById("msgAddCarrinho");
+      msg.style.opacity = "1";
+      msg.style.pointerEvents = "auto";
+      setTimeout(() => {
+        msg.style.opacity = "0";
+        msg.style.pointerEvents = "none";
+      }, 2000);
+    }
+
+    // Alternar modo escuro
+    function toggleModoEscuro() {
+      document.body.classList.toggle("dark");
+    }
+
+    // Expor para o escopo global para uso no HTML inline
+    window.toggleModoEscuro = toggleModoEscuro;
+    window.filtrar = window.filtrar;
+    window.adicionarAoCarrinho = window.adicionarAoCarrinho;
+    window.login = window.login;
+    window.adicionarProduto = window.adicionarProduto;
+    window.editarProduto = window.editarProduto;
+    window.apagarProduto = window.apagarProduto;
+  </script>
+</body>
+</html>
